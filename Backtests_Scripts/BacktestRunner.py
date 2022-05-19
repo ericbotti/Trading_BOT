@@ -134,10 +134,15 @@ class Backtest_LSTM:
         plt.title(f"Strategy results for {self.dmgt.timeframe} timeframe")
         plt.show()
 
+    def save_backtest(self):
+        strat_name = self.__class__.__name__
+        tf = self.dmgt.timeframe
+        self.dmgt.df.to_csv(f"../Backtests_Data/{strat_name}_{tf}.csv")
+
 # ---- Class that does backtest for traditional strategies ---- #
 class Backtest_Traditional:
-    def __init__(self, csv_path, maximum_holding):
-        self.dmgt = DataManager_Traditional(csv_path)
+    def __init__(self, csv_path, date_col, maximum_holding):
+        self.dmgt = DataManager_Traditional(csv_path, date_col)
         # Trade variables
         self.open_pos = False
         self.entry_price = None
@@ -266,3 +271,8 @@ class Backtest_Traditional:
         self.dmgt.df.returns.cumsum().plot()
         plt.title(f"Strategy results for {self.dmgt.timeframe} timeframe")
         plt.show()
+
+    def save_backtest(self):
+            strat_name = self.__class__.__name__
+            tf = self.dmgt.timeframe
+            self.dmgt.df.to_csv(f"../Backtests_Data/{strat_name}_{tf}.csv")

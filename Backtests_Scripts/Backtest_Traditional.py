@@ -72,8 +72,7 @@ class HigherLower(Backtest_Traditional):
         df.dropna(inplace=True)
 
 class IMeanReversion(Backtest_Traditional):
-    def __init__(self, csv_path, date_col, max_holding, ub_mult, lb_mult,
-                 up_filter, down_filter, long_lookback, short_lookback):
+    def __init__(self, csv_path, date_col, max_holding, ub_mult, lb_mult, up_filter, down_filter, long_lookback, short_lookback):
         super().__init__(csv_path, date_col, max_holding)
         
         # Target and stop losses mults
@@ -136,9 +135,9 @@ class PolyTrend(Backtest_Traditional):
 
 if __name__ == '__main__':
     # Universal parameters
-    csv_path = '/Users/ericbottinelli/BTC_perpetual_2years_best_test.csv'
+    csv_path = '../Data/BPF_testset_1min.csv'
     date_col = 'timestamp'
-    max_holding = 12
+    maximum_holding = 12
 
     # MomentumRSI parameters
     ub_mult = 1.01 # change this to change target (longs) stops (shorts)
@@ -171,11 +170,11 @@ if __name__ == '__main__':
 
 
     # Comment/uncomment the test you want to start
-    system = MovingAverageStrategy(csv_path, date_col, max_holding)
-    system = MomentumRSI(csv_path, date_col, max_holding, ub_mult, lb_mult, rsi_window, rsi_long, rsi_short, ma_long, ma_short)
-    system = HigherLower(csv_path, date_col, max_holding)
-    system = IMeanReversion(csv_path, date_col, max_holding, ub_mult, lb_mult, up_filter, down_filter, long_lookback, short_lookback)
-    system = PolyTrend(csv_path, date_col, max_holding, lookback, look_ahead, long_thres, short_thres, ub_mult, lb_mult, long_tp, long_sl, short_tp, short_sl)
+    #system = MovingAverageStrategy(csv_path, date_col, maximum_holding)
+    #system = MomentumRSI(csv_path, date_col, maximum_holding, ub_mult, lb_mult, rsi_window, rsi_long, rsi_short, ma_long, ma_short)
+    #system = HigherLower(csv_path, date_col, maximum_holding)
+    #system = IMeanReversion(csv_path, date_col, maximum_holding, ub_mult, lb_mult, up_filter, down_filter, long_lookback, short_lookback)
+    system = PolyTrend(csv_path, date_col, maximum_holding, lookback, look_ahead, long_thres, short_thres, ub_mult, lb_mult, long_tp, long_sl, short_tp, short_sl)
     
     # Change time frequency
     system.dmgt.change_resolution('60min') # 1min .... 60 min
