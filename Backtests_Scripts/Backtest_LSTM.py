@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from BacktestRunner import Backtest_LSTM
-from TechnicalIndicator import get_technical_indicators
+from Backtests_Scripts.TechnicalIndicator import get_technical_indicators
 import tensorflow as tf
 from tensorflow import keras
 from pickle import load
