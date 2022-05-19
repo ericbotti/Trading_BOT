@@ -5,16 +5,11 @@ import pandas as pd
 import numpy as np
 import tensorflow
 from tensorflow import keras
-from sklearn.preprocessing import MinMaxScaler
 from datetime import datetime 
 import time
 import json
-
 from termcolor import colored
-
-from sklearn import preprocessing
-
-import joblib
+from pickle import load
 
 with open('./auth_creds.json') as j:
     creds = json.load(j)
@@ -24,86 +19,49 @@ client_secret = creds['paper']['client_secret']
 
 
 class PolyTest(StrategyBase):
-
-    def __init__(self, client_id, client_secret, instrument, timeframe,
-                 trade_capital, max_holding, ub_mult, lb_mult,
-                 entry_cond, lookback, n, live=False):
-
-        super().__init__(client_id, client_secret, instrument, timeframe,
-                         trade_capital, max_holding, ub_mult, lb_mult,
-                         live)
+    def __init__(self, client_id, client_secret, instrument, timeframe, trade_capital, max_holding, ub_mult, lb_mult, entry_cond, lookback, n, live=False):
+        super().__init__(client_id, client_secret, instrument, timeframe, trade_capital, max_holding, ub_mult, lb_mult, live)
 
         self.entry_cond = entry_cond
         self.lookback = lookback
         self.n = n
         self.delta = 60_000 # Milliseconds
-
         self.WS = DeribitWS(client_id, client_secret, live)
 
     def data_validation(self, data):
-
         df = data.copy()
-
-        #change timestamp column to datetime 
+        # Change timestamp column to datetime 
         df['timestamp'] = pd.to_datetime(df['timestamp'])
-
-        #drop duplicates
-        df.drop_duplicates(subset=['timestamp'],
-                        keep='first',
-                        inplace=True)
+        # Drop duplicates
+        df.drop_duplicates(subset=['timestamp'], keep='first', inplace=True)
         df.reset_index(inplace=True)
-
-        keep_cols = ['volume',  
-                'open', 'low', 'high','close',
-            'timestamp']
-
+        keep_cols = ['volume', 'open', 'low', 'high', 'close', 'timestamp']
         for i in df.columns:
             if i in keep_cols:
                 pass
             else:
                 del df[i]
         df = get_technical_indicators(df)
-
-
         # Reorder columns
         columns_titles = ['timestamp','open','low','high','close','volume','ma5','ma20','ma30','ma60','26ema','12ema','MACD','20sd','upper_band','lower_band','ema','RSI','log_ret_1','log_ret_2','log_ret_3','log_ret_4','log_ret_5','cum_log_ret_3','cum_log_ret_5','diff_cum_log_ret','ROC_9','ROC_14','DEMA_short','DEMA_long','momentum','log_momentum']
         df=df.reindex(columns=columns_titles)
-        #Set Target Variable
-        output_var = pd.DataFrame(df['close'])
-        #Selecting the Features
+        # Selecting features
         features = ['low','high','open','volume','ma5','ma20','ma30','ma60','26ema','12ema','MACD','20sd','upper_band','lower_band','ema','RSI','log_ret_1','log_ret_2','log_ret_3','log_ret_4','log_ret_5','cum_log_ret_3','cum_log_ret_5','diff_cum_log_ret','ROC_9','ROC_14','DEMA_short','DEMA_long','momentum','log_momentum']
         df = df.dropna()
-
-        '''
-        df = np.array(df[features])
-        from pickle import load
-        scaler = load(open('/Users/ericbottinelli/Desktop/ETH/Thesis/Code/Python/BA_Bot_v6/MinMaxModels/scaler.pkl', 'rb'))
-        #min_max_scaler = preprocessing.MinMaxScaler(feature_range=(0, 1))
-        data_scaled = scaler.fit_transform(df.reshape(30,-1))
-        df = data_scaled.reshape( -1, 30)
-        '''
-        
-        #Scaling
-        #my_scaler = joblib.load('/Users/ericbottinelli/Desktop/ETH/Thesis/Code/Python/BA_Bot_v6/MinMaxModels/MinMaxModel_test_38.pkl')
-
-        # load the scaler
-        from pickle import load
+        # Load the scaler
         scaler = load(open('../LSTM_MinMaxModels/MinMaxModel_test_69.pkl', 'rb'))
+        # Add the scaler to the dataframe
         feature_transform = scaler.transform(df[features])
         feature_transform = pd.DataFrame(columns=features, data=feature_transform, index=df.index)
         df = feature_transform
-        
         df = np.array(df)
-
         df = df.reshape(df.shape[0], 1, df.shape[1])
-        
         return df
 
     def generate_signal(self, data,lstm):
-
         previously = data.close.values.reshape(-1, 1)
         y = self.data_validation(data)
-        pred = lstm(y) # https://stackoverflow.com/questions/66271988/warningtensorflow11-out-of-the-last-11-calls-to-triggered-tf-function-retracin
+        pred = lstm(y)
         now = datetime.now()
         dt_string = now.strftime('%d/%m/%Y %H:%M:%S') # Generate a readable time format
         print(colored(f'{dt_string}', 'cyan', attrs=['bold']), f"Predicted: {int(pred)}, Last: {int(previously[-1])}")
@@ -113,7 +71,6 @@ class PolyTest(StrategyBase):
             return -1
         else:
             return 0
-
 
     def get_data(self):
         end = self.utc_times_now()
@@ -130,7 +87,6 @@ class PolyTest(StrategyBase):
 
 
     def run(self, endtime):
-
         print('\n\n')
         print(colored('=======================================','red'))
         print(colored('=======================================','red'))
@@ -141,7 +97,6 @@ class PolyTest(StrategyBase):
         print(colored('=======================================','red'))
         print(colored('=======================================','red'))
         print('\n\n')
-
         now = datetime.now()
         dt_string = now.strftime('%d/%m/%Y %H:%M:%S') # Generate a readable time format
         initial_equity = self.WS.account_summary('BTC')["result"]["equity"]
@@ -168,7 +123,6 @@ class PolyTest(StrategyBase):
                     self.monitor_open(last_price, initial_equity)
                 else:
                     pass
-
                 time.sleep(1)
 
             if timenow >= endtime:
@@ -176,9 +130,6 @@ class PolyTest(StrategyBase):
                 if self.open_pos:
                     self.close_position(initial_equity)
                 break
-
-
-
 
 if __name__ == '__main__':
     instrument = 'BTC-PERPETUAL'
@@ -191,9 +142,7 @@ if __name__ == '__main__':
     n = 3
     lookback = 59
 
-    strat = PolyTest(client_id, client_secret, instrument, timeframe, trade_capital,
-                     max_holding, ub_mult, lb_mult, entry_cond, lookback, n, live=False)
+    strat = PolyTest(client_id, client_secret, instrument, timeframe, trade_capital, max_holding, ub_mult, lb_mult, entry_cond, lookback, n, live=False)
 
     endtime = datetime(2022, 6, 19, 9, 45)
-
     strat.run(endtime)

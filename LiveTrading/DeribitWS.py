@@ -1,14 +1,10 @@
 import asyncio
 import websockets
 import json
-
 from termcolor import colored
 
-
 class DeribitWS:
-
     def __init__(self, client_id, client_secret, live=False):
-
         if not live:
             self.url = 'wss://test.deribit.com/ws/api/v2'
         elif live:
@@ -16,10 +12,8 @@ class DeribitWS:
         else:
             raise Exception('live must be a bool, True=real, False=paper')
 
-
         self.client_id = client_id
         self.client_secret = client_secret
-
         self.auth_creds = {
               "jsonrpc" : "2.0",
               "id" : 0,
@@ -31,7 +25,6 @@ class DeribitWS:
               }
             }
         self.test_creds()
-
         self.msg = {
             "jsonrpc": "2.0",
             "id": 0,
@@ -71,25 +64,20 @@ class DeribitWS:
                 "instrument_name" : instrument,
                 "amount" : amount,
                 "type" : "market",
-              }
-
+              }       
         if direction.lower() == 'long':
             side = 'buy'
         elif direction.lower() == 'short':
             side = 'sell'
         else:
             raise ValueError('direction must be long or short')
-
+        
         self.msg["method"] = f"private/{side}"
         self.msg["params"] = params
-
         response = self.async_loop(self.priv_api, json.dumps(self.msg))
-
         return response
 
-
-    def limit_order(self, instrument, amount, direction, price,
-                   post_only, reduce_only):
+    def limit_order(self, instrument, amount, direction, price, post_only, reduce_only):
         params = {
             "instrument_name": instrument,
             "amount": amount,
@@ -97,21 +85,21 @@ class DeribitWS:
             "price": price,
             "post_only":  post_only,
             "reduce_only": reduce_only
-
-        }
+        }       
         if direction.lower() == 'long':
             side = 'buy'
         elif direction.lower() == 'short':
             side = 'sell'
         else:
             raise ValueError('direction must be long or short')
-
+        
         self.msg["method"] = f"private/{side}"
         self.msg["params"] = params
         response = self.async_loop(self.priv_api, json.dumps(self.msg))
         return response
 
-    # market data methods
+    # ---- Market data methods ---- #
+
     def get_data(self, instrument, start, end, timeframe):
         params =  {
                 "instrument_name": instrument,
@@ -119,10 +107,8 @@ class DeribitWS:
                 "end_timestamp": end,
                 "resolution": timeframe
             }
-
         self.msg["method"] = "public/get_tradingview_chart_data"
         self.msg["params"] = params
-
         data = self.async_loop(self.pub_api, json.dumps(self.msg))
         return data
 
@@ -133,7 +119,6 @@ class DeribitWS:
         }
         self.msg["method"] = "public/get_order_book"
         self.msg["params"] = params
-
         order_book = self.async_loop(self.pub_api, json.dumps(self.msg))
         return order_book
 
@@ -144,16 +129,15 @@ class DeribitWS:
         self.msg["method"] = "public/ticker"
         self.msg["params"] = params
         quote = self.async_loop(self.pub_api, json.dumps(self.msg))
-
         return quote['result']['last_price']
 
-    #account methods
+    # ---- Account methods ---- #
+
     def account_summary(self, currency, extended=True):
         params = {
             "currency": currency,
             "extended": extended,
         }
-
         self.msg["method"] = "private/get_account_summary"
         self.msg["params"] = params
         summary = self.async_loop(self.priv_api, json.dumps(self.msg))
@@ -175,7 +159,6 @@ class DeribitWS:
             "kind": kind,
             "expired": expired
         }
-
         self.msg["method"] = "public/get_instruments"
         self.msg["params"] = params
         resp = self.async_loop(self.pub_api, json.dumps(self.msg))
@@ -192,7 +175,6 @@ class DeribitWS:
         order_history = self.async_loop(self.priv_api, json.dumps(self.msg))
         return order_history['result']['profit_loss']
 
-
 if __name__ == '__main__':
     with open('./auth_creds.json') as j:
         creds = json.load(j)
@@ -201,26 +183,23 @@ if __name__ == '__main__':
     client_secret = creds['paper']['client_secret']
 
     ws = DeribitWS(client_id=client_id, client_secret=client_secret, live=False)
-    #market order for $100 worth of btc
+    # Market order for $100 worth of btc
     test_resp = ws.market_order("BTC-PERPETUAL", 100, 'short')
-    #get historic data for btc
+    #  Get historic data for btc
     data = ws.get_data("BTC-PERPETUAL", 1554373800000, 1554376800000, '1')
     print(data)
-    #code below is for limit orders
-    # limit_response = ws.limit_order(instrument="BTC-PERPETUAL", amount=100, direction='short',
-    #                                 price= 13500 ,  post_only= True, reduce_only=False)
-    
-    #shows the available futures contracts
+
+    # Shows the available futures contracts
     instruments = ws.available_instruments('ETH')
     print(instruments)
     
-    #get order book
+    # Get order book
     orderbook = ws.get_orderbook("BTC-PERPETUAL")
     print(orderbook)
-    #get last bitcoin price
+    # Get last bitcoin price
     btc_price = ws.get_quote("BTC-PERPETUAL")
     print(btc_price)
 
-    #get account summary
+    # Get account summary
     account_summary = ws.account_summary('BTC')
     print(colored(account_summary,'yellow'))

@@ -31,7 +31,7 @@ class MomentumRSI(Backtest_Traditional):
 
     def calculate_rsi(self):
         df = self.dmgt.df
-        # creat change column
+        # Create change column
         df['change'] = df.close.diff()
         df['U'] = [x if x > 0 else 0 for x in df.change]
         df['D'] = [abs(x) if x < 0 else 0 for x in df.change]
