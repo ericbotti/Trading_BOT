@@ -1,5 +1,6 @@
 from Datamanager import DataManager_LSTM, DataManager_Traditional
 import matplotlib.pyplot as plt
+import pandas as pd
 
 # ---- Class that does the LSTM strategy backtest ---- #
 class Backtest_LSTM:
@@ -17,6 +18,7 @@ class Backtest_LSTM:
         # Parameters
         self.ub_mult = 1.04
         self.lb_mult = 0.96
+        #self.lb_mult = self.dmgt.df.close.ewm(span=50).std()
         # Special case of vertical barrier
         self.end_date = self.dmgt.df.index.values[-1]
 

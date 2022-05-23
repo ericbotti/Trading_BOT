@@ -151,7 +151,7 @@ class BacktestProfile:
         print('==' * 50)
 
 if __name__ == '__main__':
-    bt = pd.read_csv("../Backtests_Data/Backtest.csv") # Choose the backtest previously made for which you want the statistics of it
-    freq = '1min' # Should match the frequency of the backtest previously made
+    bt = pd.read_csv("../Backtests_Data/MomentumRSI_15min.csv") # Choose the backtest previously made for which you want the statistics of it
+    freq = '15min' # Should match the frequency of the backtest previously made
     BT = BacktestProfile(bt, freq)
     BT.show_perf("Backtest")

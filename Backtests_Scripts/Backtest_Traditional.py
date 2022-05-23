@@ -33,8 +33,8 @@ class MomentumRSI(Backtest_Traditional):
         df = self.dmgt.df
         # Create change column
         df['change'] = df.close.diff()
-        df['U'] = [x if x > 0 else 0 for x in df.change]
-        df['D'] = [abs(x) if x < 0 else 0 for x in df.change]
+        df['U'] = [x if x > 0 else 0 for x in df.change] # Calculate column of upwards changes
+        df['D'] = [abs(x) if x < 0 else 0 for x in df.change] # Create column of downwards changes
         df['U'] = df.U.ewm(span=self.rsi_window, min_periods=self.rsi_window-1).mean()
         df['D'] = df.D.ewm(span=self.rsi_window, min_periods=self.rsi_window - 1).mean()
         df['RS'] = df.U / df.D
@@ -145,8 +145,8 @@ if __name__ == '__main__':
     rsi_window = 14
     rsi_long = 30
     rsi_short = 70
-    ma_long = 200
-    ma_short = 50
+    ma_long = 26
+    ma_short = 12
 
     # IntradayMeanReversion parameters
     ub_mult = 1.02 #target / stop
@@ -171,13 +171,13 @@ if __name__ == '__main__':
 
     # Comment/uncomment the test you want to start
     #system = MovingAverageStrategy(csv_path, date_col, maximum_holding)
-    #system = MomentumRSI(csv_path, date_col, maximum_holding, ub_mult, lb_mult, rsi_window, rsi_long, rsi_short, ma_long, ma_short)
+    system = MomentumRSI(csv_path, date_col, maximum_holding, ub_mult, lb_mult, rsi_window, rsi_long, rsi_short, ma_long, ma_short)
     #system = HigherLower(csv_path, date_col, maximum_holding)
     #system = IMeanReversion(csv_path, date_col, maximum_holding, ub_mult, lb_mult, up_filter, down_filter, long_lookback, short_lookback)
-    system = PolyTrend(csv_path, date_col, maximum_holding, lookback, look_ahead, long_thres, short_thres, ub_mult, lb_mult, long_tp, long_sl, short_tp, short_sl)
+    #system = PolyTrend(csv_path, date_col, maximum_holding, lookback, look_ahead, long_thres, short_thres, ub_mult, lb_mult, long_tp, long_sl, short_tp, short_sl)
     
     # Change time frequency
-    system.dmgt.change_resolution('60min') # 1min .... 60 min
+    system.dmgt.change_resolution('15min') # 1min .... 60 min
 
     system.run_backtest()
     system.show_performace()

@@ -25,7 +25,7 @@ class PolyTest(StrategyBase):
         self.entry_cond = entry_cond
         self.lookback = lookback
         self.n = n
-        self.delta = 60_000 # Milliseconds
+        self.delta = 60_000 # Milliseconds -> 60'000 equals to 1 min
         self.WS = DeribitWS(client_id, client_secret, live)
 
     def data_validation(self, data):

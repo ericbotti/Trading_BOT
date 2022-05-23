@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from BacktestRunner import Backtest_LSTM
-from Backtests_Scripts.TechnicalIndicator import get_technical_indicators
+from TechnicalIndicator import get_technical_indicators
 import tensorflow as tf
 from tensorflow import keras
 from pickle import load
@@ -61,7 +61,7 @@ class LSTM(Backtest_LSTM):
         pred = lstm(data_processed)
         res = np.array(tf.math.divide(pred,previously)-1)
         # Signal generator
-        entry_cond = 0.05 # Difference in price and precition that has to present in order to generate a signal (not in %)
+        entry_cond = 0.03 # Difference in price and precition that has to present in order to generate a signal (not in %)
         data['long_entry'] = 1 * (res > entry_cond)
         data['short_entry'] = -1 * (res < -entry_cond)
         data['entry'] = data.long_entry + data.short_entry # Signal added to the dataframe
