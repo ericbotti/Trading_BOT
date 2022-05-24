@@ -1,6 +1,7 @@
 from Datamanager import DataManager_LSTM, DataManager_Traditional
 import matplotlib.pyplot as plt
 import pandas as pd
+import numpy as np
 
 # ---- Class that does the LSTM strategy backtest ---- #
 class Backtest_LSTM:
@@ -26,6 +27,10 @@ class Backtest_LSTM:
         self.holding_series = []
         self.direction_series = []
 
+        self.long_short_close = [] # ADD
+        self.long_open = [] # ADD
+        self.short_open = [] # ADD
+
     # -- Function that receive the price at which the long position should bee initiated and populates trade variables from constructor with relevant variables -- #
     def open_long(self, price):
         self.open_pos = True
@@ -34,6 +39,10 @@ class Backtest_LSTM:
         self.target_price = price * self.ub_mult
         self.stop_price = price * self.lb_mult
         self.add_zeros()
+        
+        self.long_open.append(price) # ADD
+        self.short_open.append(np.NaN) # ADD
+        #self.long_short_close.append(np.NaN) # ADD
 
     # -- Function that receive the price at which the short position should bee initiated and populates trade variables from constructor with relevant variables -- #
     def open_short(self, price):
@@ -43,6 +52,10 @@ class Backtest_LSTM:
         self.target_price = price * self.lb_mult
         self.stop_price = price * self.ub_mult
         self.add_zeros()
+
+        self.short_open.append(price) # ADD
+        self.long_open.append(np.NaN) # ADD
+        #self.long_short_close.append(np.NaN) # ADD
 
     # -- Resets the variables after we close a trade -- #
     def reset_variables(self):
@@ -59,11 +72,27 @@ class Backtest_LSTM:
         self.holding_series.append(0)
         self.direction_series.append(0)
 
+        self.long_short_close.append(np.NaN) # ADD
+        self.long_open.append(np.NaN) # ADD
+        self.short_open.append(np.NaN) # ADD
+        #self.long_open.append(0) # ADD
+        #self.short_open.append(0) # ADD
+
+    # -- Function that appends NaN, meaning "nothing", to the missing slots. The purpose is plotting the graph of buys and sells. Adding a zero then it will show the point even without a transaction there -- #
+    def add_nan(self): # ADD
+        self.long_short_close.append(np.NaN) # ADD
+        #self.long_open.append(np.NaN) # ADD
+       #self.short_open.append(np.NaN) # ADD
+
     # -- Receives the exite price and appends the trade Profit & Loss (pnl) to the returns series and resets variables -- #
     def close_position(self, price):
         pnl = (price / self.entry_price - 1) * self.direction
         self.process_close_var(pnl)
         self.reset_variables()
+
+        self.long_short_close.append(price) # ADD
+        #self.long_open.append(np.NaN) # ADD
+        #self.short_open.append(np.NaN) # ADD
 
     # -- Update parameters -- #
     def process_close_var(self, pnl):
@@ -100,12 +129,21 @@ class Backtest_LSTM:
         else:
             self.max_holding = self.max_holding - 1
             self.add_zeros()
+            #self.add_nan()
 
     # -- Functions that merges the new columns created for the backtest into the dataframe, also resets the return series to empty list -- #
     def add_trade_cols(self):
         self.dmgt.df['returns'] = self.returns_series
         self.dmgt.df['holding'] = self.holding_series
         self.dmgt.df['direction'] = self.direction_series
+
+        self.dmgt.df['long_short_close'] = self.long_short_close # ADD
+        self.dmgt.df['long_open'] = self.long_open # ADD
+        self.dmgt.df['short_open'] = self.short_open # ADD
+
+        self.long_short_close = [] # ADD
+        self.long_open = [] # ADD
+        self.short_open = [] # ADD
 
         self.returns_series = []
         self.holding_series = []

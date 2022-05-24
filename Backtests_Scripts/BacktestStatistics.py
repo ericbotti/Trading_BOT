@@ -1,7 +1,13 @@
+from turtle import width
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
+
+import plotly.graph_objects as go
+import numpy as np
+import plotly.express as px
+import pandas as pd
 
 class BacktestStatistics:
     # -- Calculates the number of periods per annum for a chosen frequency -- #
@@ -129,6 +135,25 @@ class BacktestProfile:
         plt.tight_layout()
         plt.show()
 
+        df = self.bt
+        fig, ax = plt.subplots(figsize=(14,8))
+        ax.plot(df['close'] , label = 'Bitcoin Perpetual Future Close Price' ,linewidth=0.7, color='gray', alpha = 0.9)
+        ax.plot(df['prediction'] , label = 'Prediction BPF Price' ,linewidth=0.7, color='orange', alpha = 0.9)
+        #ax.plot(df['12ema'], label = 'EMA 12', alpha = 0.85)
+        #ax.plot(df['26ema'], label = 'EMA 26' , alpha = 0.85)
+        ax.scatter(df.index , df['long_open'], label = 'Open long' , marker = '^', color = 'green',alpha =1,s = 50)
+        ax.scatter(df.index , df['short_open'], label = 'Open short' , marker = 'v', color = 'blue',alpha =1, s = 50)
+        ax.scatter(df.index , df['long_short_close'], label = 'Sell' , marker = 'x', color = 'red',alpha =1, s = 50)
+        ax.set_title('BPF Price History with buy and sell signals')
+        #start_date = df['timestamp'][0]
+        #end_date = df['timestamp'][-1]
+        ax.set_xlabel('Date' ,fontsize=18)
+        ax.set_ylabel('Close Price' , fontsize=18)
+        legend = ax.legend()
+        ax.grid()
+        plt.tight_layout()
+        plt.show()
+
         df_plot = self.bt
         df_plot[['returns_no_fee', 'returns_fees']].plot(color=['red', 'black'])
         plt.title(f"{title}")
@@ -151,7 +176,8 @@ class BacktestProfile:
         print('==' * 50)
 
 if __name__ == '__main__':
-    bt = pd.read_csv("../Backtests_Data/MomentumRSI_1min.csv") # Choose the backtest previously made for which you want the statistics of it
-    freq = '120min' # Should match the frequency of the backtest previously made
+    bt = pd.read_csv("../Backtests_Data/Backtest_LSTM.csv") # Choose the backtest previously made for which you want the statistics of it
+    freq = '1min' # Should match the frequency of the backtest previously made
     BT = BacktestProfile(bt, freq)
-    BT.show_perf("Backtest")
+    #BT.show_perf("Backtest")
+    BT.show_perf('Result')

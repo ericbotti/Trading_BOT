@@ -65,12 +65,13 @@ class LSTM(Backtest_LSTM):
         data['long_entry'] = 1 * (res > entry_cond)
         data['short_entry'] = -1 * (res < -entry_cond)
         data['entry'] = data.long_entry + data.short_entry # Signal added to the dataframe
+        data['prediction'] = pred
         self.dmgt.df = data
 
 if __name__ == '__main__':
     # Universal parameters
     csv_path = '../Data/BPF_testset_1min.csv'
-    maximum_holding = 70 # Minutes
+    maximum_holding = 55 # Minutes
 
     system = LSTM(csv_path, maximum_holding)
 

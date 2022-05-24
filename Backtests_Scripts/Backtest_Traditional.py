@@ -167,13 +167,13 @@ if __name__ == '__main__':
 
     # Comment/uncomment the test you want to start
     #system = MovingAverageStrategy(csv_path, date_col, maximum_holding)
-    system = MomentumRSI(csv_path, date_col, maximum_holding, ub_mult, lb_mult, rsi_window, rsi_long, rsi_short, ma_long, ma_short)
-    #system = HigherLower(csv_path, date_col, maximum_holding)
+    #system = MomentumRSI(csv_path, date_col, maximum_holding, ub_mult, lb_mult, rsi_window, rsi_long, rsi_short, ma_long, ma_short)
+    system = HigherLower(csv_path, date_col, maximum_holding)
     #system = IMeanReversion(csv_path, date_col, maximum_holding, ub_mult, lb_mult, up_filter, down_filter, long_lookback, short_lookback)
     #system = PolyTrend(csv_path, date_col, maximum_holding, lookback, look_ahead, long_thres, short_thres, ub_mult, lb_mult, long_tp, long_sl, short_tp, short_sl)
     
     # Change time frequency
-    system.dmgt.change_resolution('120min') # 1min .... 60 min
+    system.dmgt.change_resolution('240min') # 1min .... 60 min
 
     system.run_backtest()
     system.show_performace()
