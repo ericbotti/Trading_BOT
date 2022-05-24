@@ -70,7 +70,7 @@ class LSTM(Backtest_LSTM):
 if __name__ == '__main__':
     # Universal parameters
     csv_path = '../Data/BPF_testset_1min.csv'
-    maximum_holding = 60 # Minutes
+    maximum_holding = 70 # Minutes
 
     system = LSTM(csv_path, maximum_holding)
 

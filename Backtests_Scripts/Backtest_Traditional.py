@@ -137,11 +137,11 @@ if __name__ == '__main__':
     # Universal parameters
     csv_path = '../Data/BPF_testset_1min.csv'
     date_col = 'timestamp'
-    maximum_holding = 12
+    maximum_holding = 55
+    ub_mult = 1.03 # change this to change target (longs) stops (shorts)
+    lb_mult = 0.97 # change this to change stops (longs) targets (shorts)
 
     # MomentumRSI parameters
-    ub_mult = 1.01 # change this to change target (longs) stops (shorts)
-    lb_mult = 0.99 # change this to change stops (longs) targets (shorts)
     rsi_window = 14
     rsi_long = 30
     rsi_short = 70
@@ -149,8 +149,6 @@ if __name__ == '__main__':
     ma_short = 12
 
     # IntradayMeanReversion parameters
-    ub_mult = 1.02 #target / stop
-    lb_mult = 0.98 #target / stop
     up_filter = 1.03 # change this to change filter for longs
     down_filter = 0.97 # change this for shorts filter
     long_lookback = 60*24*30
@@ -161,8 +159,6 @@ if __name__ == '__main__':
     look_ahead = 4 # periods ahead to predict for each endpoint of the model
     long_thres = 0.03 #if model predicts a price that represents an increase of 3% we enter
     short_thres = -0.03 # opposite of above
-    ub_mult = 1.02
-    lb_mult = 0.98
     long_tp = 1.03 #long target in %
     long_sl = 0.98 # long stop loss 
     short_tp = 0.96 # short target 
@@ -177,7 +173,7 @@ if __name__ == '__main__':
     #system = PolyTrend(csv_path, date_col, maximum_holding, lookback, look_ahead, long_thres, short_thres, ub_mult, lb_mult, long_tp, long_sl, short_tp, short_sl)
     
     # Change time frequency
-    system.dmgt.change_resolution('15min') # 1min .... 60 min
+    system.dmgt.change_resolution('120min') # 1min .... 60 min
 
     system.run_backtest()
     system.show_performace()

@@ -16,8 +16,8 @@ class Backtest_LSTM:
         self.max_holding = maximum_holding
         self.max_holding_limit = maximum_holding
         # Parameters
-        self.ub_mult = 1.04
-        self.lb_mult = 0.96
+        self.ub_mult = 1.03
+        self.lb_mult = 0.97
         #self.lb_mult = self.dmgt.df.close.ewm(span=50).std()
         # Special case of vertical barrier
         self.end_date = self.dmgt.df.index.values[-1]
@@ -155,8 +155,8 @@ class Backtest_Traditional:
         self.max_holding = maximum_holding
         self.max_holding_limit = maximum_holding
         # Parameters
-        self.ub_mult = 1.04
-        self.lb_mult = 0.96
+        self.ub_mult = 1.03
+        self.lb_mult = 0.97
         # Special case of vertical barrier
         self.end_date = self.dmgt.df.index.values[-1]
 
