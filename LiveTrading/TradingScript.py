@@ -1,4 +1,4 @@
-from StrategyBase import StrategyBase
+from Processor import Processor
 from TechnicalIndicator import get_technical_indicators
 from DeribitWS import DeribitWS
 import pandas as pd
@@ -18,7 +18,7 @@ client_id = creds['paper']['client_id']
 client_secret = creds['paper']['client_secret']
 
 
-class PolyTest(StrategyBase):
+class TradingScript(Processor):
     def __init__(self, client_id, client_secret, instrument, timeframe, trade_capital, max_holding, ub_mult, lb_mult, entry_cond, lookback, n, live=False):
         super().__init__(client_id, client_secret, instrument, timeframe, trade_capital, max_holding, ub_mult, lb_mult, live)
 
@@ -137,12 +137,12 @@ if __name__ == '__main__':
     trade_capital = 90
     ub_mult = 1.04
     lb_mult = 0.96
-    max_holding = 60 # Minutes
+    max_holding = 55 # Minutes
     entry_cond = 0.05
     n = 3
     lookback = 59
 
-    strat = PolyTest(client_id, client_secret, instrument, timeframe, trade_capital, max_holding, ub_mult, lb_mult, entry_cond, lookback, n, live=False)
+    strat = TradingScript(client_id, client_secret, instrument, timeframe, trade_capital, max_holding, ub_mult, lb_mult, entry_cond, lookback, n, live=False) # Creation of the object
 
     endtime = datetime(2022, 6, 19, 9, 45)
     strat.run(endtime)

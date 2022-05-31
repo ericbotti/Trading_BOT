@@ -77,27 +77,6 @@ class DeribitWS:
         response = self.async_loop(self.priv_api, json.dumps(self.msg))
         return response
 
-    def limit_order(self, instrument, amount, direction, price, post_only, reduce_only):
-        params = {
-            "instrument_name": instrument,
-            "amount": amount,
-            "type": "limit",
-            "price": price,
-            "post_only":  post_only,
-            "reduce_only": reduce_only
-        }       
-        if direction.lower() == 'long':
-            side = 'buy'
-        elif direction.lower() == 'short':
-            side = 'sell'
-        else:
-            raise ValueError('direction must be long or short')
-        
-        self.msg["method"] = f"private/{side}"
-        self.msg["params"] = params
-        response = self.async_loop(self.priv_api, json.dumps(self.msg))
-        return response
-
     # ---- Market data methods ---- #
 
     def get_data(self, instrument, start, end, timeframe):
