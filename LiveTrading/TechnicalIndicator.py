@@ -67,8 +67,8 @@ def get_technical_indicators(dataset):
     dataset['20sd'] = dataset['open'].rolling(window = 21).std()
     dataset['upper_band'] = dataset['ma20'] + (dataset['20sd']*2)
     dataset['lower_band'] = dataset['ma20'] - (dataset['20sd']*2)
-    # Create Exponential moving average
-    dataset['ema'] = dataset['open'].ewm(com=0.9).mean()
+    # Create Exponential Weighted Moving Average
+    dataset['ewma'] = dataset['open'].ewm(com=0.9).mean()
     # Create RSI
     dataset['RSI'] = compute_RSI(dataset['open'], 14)
     # Create Williams' %R
