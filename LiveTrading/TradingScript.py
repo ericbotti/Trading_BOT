@@ -3,7 +3,6 @@ from TechnicalIndicator import get_technical_indicators
 from DeribitWS import DeribitWS
 import pandas as pd
 import numpy as np
-import tensorflow
 from tensorflow import keras
 from datetime import datetime 
 import time
@@ -134,15 +133,15 @@ class TradingScript(Processor):
 if __name__ == '__main__':
     instrument = 'BTC-PERPETUAL'
     timeframe = '1'
-    trade_capital = 90
-    ub_mult = 1.04
-    lb_mult = 0.96
+    trade_capital = 100
+    ub_mult = 1.03
+    lb_mult = 0.97
     max_holding = 55 # Minutes
-    entry_cond = 0.05
+    entry_cond = 0.03
     n = 3
     lookback = 59
 
     strat = TradingScript(client_id, client_secret, instrument, timeframe, trade_capital, max_holding, ub_mult, lb_mult, entry_cond, lookback, n, live=False) # Creation of the object
 
-    endtime = datetime(2022, 6, 19, 9, 45)
+    endtime = datetime(2022, 8, 30, 9, 45)
     strat.run(endtime)
