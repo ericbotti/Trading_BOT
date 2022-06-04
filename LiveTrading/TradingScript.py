@@ -42,10 +42,10 @@ class TradingScript(Processor):
                 del df[i]
         df = get_technical_indicators(df)
         # Reorder columns
-        columns_titles = ['timestamp','open','low','high','close','volume','ma5','ma20','ma30','ma60','26ema','12ema','MACD','20sd','upper_band','lower_band','ewma','RSI','log_ret_1','log_ret_2','log_ret_3','log_ret_4','log_ret_5','cum_log_ret_3','cum_log_ret_5','diff_cum_log_ret','ROC_9','ROC_14','DEMA_short','DEMA_long','momentum','log_momentum']
+        columns_titles = ['timestamp','open','low','high','close','volume','ma5','ma20','ma30','ma60','26ema','12ema','MACD','20sd','upper_band','lower_band','ema','RSI','log_ret_1','log_ret_2','log_ret_3','log_ret_4','log_ret_5','cum_log_ret_3','cum_log_ret_5','diff_cum_log_ret','ROC_9','ROC_14','DEMA_short','DEMA_long','momentum','log_momentum']
         df=df.reindex(columns=columns_titles)
         # Selecting features
-        features = ['low','high','open','volume','ma5','ma20','ma30','ma60','26ema','12ema','MACD','20sd','upper_band','lower_band','ewma','RSI','log_ret_1','log_ret_2','log_ret_3','log_ret_4','log_ret_5','cum_log_ret_3','cum_log_ret_5','diff_cum_log_ret','ROC_9','ROC_14','DEMA_short','DEMA_long','momentum','log_momentum']
+        features = ['low','high','open','volume','ma5','ma20','ma30','ma60','26ema','12ema','MACD','20sd','upper_band','lower_band','ema','RSI','log_ret_1','log_ret_2','log_ret_3','log_ret_4','log_ret_5','cum_log_ret_3','cum_log_ret_5','diff_cum_log_ret','ROC_9','ROC_14','DEMA_short','DEMA_long','momentum','log_momentum']
         df = df.dropna()
         # Load the scaler
         scaler = load(open('../LSTM_MinMaxModels/MinMaxModel_test_69.pkl', 'rb'))
