@@ -4,7 +4,7 @@ import json
 from termcolor import colored
 
 class DeribitWS:
-    def __init__(self, client_id, client_secret, live=False):
+    def __init__(self, client_id, client_secret, live=True):
         if not live:
             self.url = 'wss://test.deribit.com/ws/api/v2'
         elif live:
@@ -143,16 +143,6 @@ class DeribitWS:
         resp = self.async_loop(self.pub_api, json.dumps(self.msg))
         instruments = [d["instrument_name"] for d in resp['result']]
         return instruments
-    
-    def get_order_history_by_instrument(self, instrument, extended=True):
-        params = {
-            "instrument_name": instrument,
-            "count" : 1
-        }
-        self.msg["method"] = "private/get_order_history_by_instrument"
-        self.msg["params"] = params
-        order_history = self.async_loop(self.priv_api, json.dumps(self.msg))
-        return order_history['result']['profit_loss']
 
 if __name__ == '__main__':
     with open('./auth_creds.json') as j:

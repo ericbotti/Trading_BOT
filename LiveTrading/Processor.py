@@ -124,8 +124,6 @@ class Processor:
                 print(colored(close_resp['error'], 'red'))
 
         current_equity = self.WS.account_summary('BTC')["result"]["equity"]
-        profit_loss = self.WS.get_order_history_by_instrument("BTC-PERPETUAL")
-        print(profit_loss)
         print(f'Current equity: {current_equity}')
 
     def monitor_open(self, price, initial_equity):
