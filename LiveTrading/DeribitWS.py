@@ -4,7 +4,7 @@ import json
 from termcolor import colored
 
 class DeribitWS:
-    def __init__(self, client_id, client_secret, live=False): # To use mainnet just put live=True
+    def __init__(self, client_id, client_secret, live): 
         if not live:
             self.url = 'wss://test.deribit.com/ws/api/v2'
         elif live:
@@ -148,10 +148,10 @@ if __name__ == '__main__':
     with open('./auth_creds.json') as j:
         creds = json.load(j)
 
-    client_id = creds['paper']['client_id']
-    client_secret = creds['paper']['client_secret']
+    client_id = creds['real']['client_id'] # Mainnet -> 'real', Testnet -> 'paper'
+    client_secret = creds['real']['client_secret'] # Mainnet -> 'real', Testnet -> 'paper'
 
-    ws = DeribitWS(client_id=client_id, client_secret=client_secret, live=False)
+    ws = DeribitWS(client_id=client_id, client_secret=client_secret, live=True) # To use mainnet just put live=True
     # Market order for $100 worth of btc
     test_resp = ws.market_order("BTC-PERPETUAL", 100, 'short')
     #  Get historic data for btc
