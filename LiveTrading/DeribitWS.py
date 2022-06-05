@@ -4,7 +4,7 @@ import json
 from termcolor import colored
 
 class DeribitWS:
-    def __init__(self, client_id, client_secret, live=True):
+    def __init__(self, client_id, client_secret, live=False): # To use mainnet just put live=True
         if not live:
             self.url = 'wss://test.deribit.com/ws/api/v2'
         elif live:
