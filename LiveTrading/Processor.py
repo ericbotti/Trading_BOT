@@ -6,7 +6,7 @@ from termcolor import colored
 
 
 class Processor:
-    def __init__(self, client_id, client_secret, instrument, timeframe, trade_capital, max_holding, ub_mult, lb_mult, live=False):
+    def __init__(self, client_id, client_secret, instrument, timeframe, trade_capital, max_holding, ub_mult, lb_mult, live=True): # To use mainnet just put live=True
 
         self.WS = DeribitWS(client_id, client_secret, live)
         self.instrument = instrument

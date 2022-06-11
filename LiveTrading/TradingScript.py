@@ -13,12 +13,12 @@ from pickle import load
 with open('./auth_creds.json') as j:
     creds = json.load(j)
 
-client_id = creds['paper']['client_id']
-client_secret = creds['paper']['client_secret']
+client_id = creds['real']['client_id'] # Mainnet -> 'real', Testnet -> 'paper'
+client_secret = creds['real']['client_secret'] # Mainnet -> 'real', Testnet -> 'paper'
 
 
 class TradingScript(Processor):
-    def __init__(self, client_id, client_secret, instrument, timeframe, trade_capital, max_holding, ub_mult, lb_mult, entry_cond, lookback, n, live=False):
+    def __init__(self, client_id, client_secret, instrument, timeframe, trade_capital, max_holding, ub_mult, lb_mult, entry_cond, lookback, n, live):
         super().__init__(client_id, client_secret, instrument, timeframe, trade_capital, max_holding, ub_mult, lb_mult, live)
 
         self.entry_cond = entry_cond
@@ -141,7 +141,7 @@ if __name__ == '__main__':
     n = 3
     lookback = 59
 
-    strat = TradingScript(client_id, client_secret, instrument, timeframe, trade_capital, max_holding, ub_mult, lb_mult, entry_cond, lookback, n, live=False) # Creation of the object
+    strat = TradingScript(client_id, client_secret, instrument, timeframe, trade_capital, max_holding, ub_mult, lb_mult, entry_cond, lookback, n, live=True) # To use mainnet just put live=True
 
     endtime = datetime(2022, 8, 30, 9, 45)
     strat.run(endtime)
