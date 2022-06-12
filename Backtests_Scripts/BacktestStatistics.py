@@ -18,6 +18,8 @@ class BacktestStatistics:
             return 12 * 24 * 365
         elif freq == '15min':
             return 4 * 24 * 365
+        elif freq == '20min':
+            return 3 * 24 * 365
         elif freq == '30min':
             return 48 * 365
         elif freq == '60min':
@@ -127,14 +129,17 @@ class BacktestProfile:
         plt.style.use('ggplot')
         fig, axes = plt.subplots(2, 1,gridspec_kw={'height_ratios': [3, 1]})
         self.bt.returns_fees.plot(ax=axes[0], color='black')
-        axes[0].set_title(title)
-        axes[0].set_ylabel('Cumulative returns')
+        #axes[0].set_title(title)
+        axes[0].set_ylabel('Cumulative Returns')
+        axes[0].set_xlabel('Date')
         self.bt.dd.plot(ax=axes[1], color='red')
-        axes[1].set_title('Drawdowns')
+        #axes[1].set_title('Drawdowns')
         plt.ylabel('Drawdowns')
+        axes[1].set_xlabel('Date')
         plt.tight_layout()
         plt.show()
 
+        # !!!! If the backtest is done for a traditional method, the following block should be commented out !!!!
         df = self.bt
         fig, ax = plt.subplots(figsize=(14,8))
         ax.plot(df['close'] , label = 'Bitcoin Perpetual Future Close Price' ,linewidth=1.5, color='gray', alpha = 0.9, zorder=1)
@@ -154,16 +159,18 @@ class BacktestProfile:
 
         df_plot = self.bt
         df_plot[['returns_no_fee', 'returns_fees']].plot(color=['red', 'black'])
-        plt.title(f"{title}")
-        plt.ylabel(f'Cumulative {self.ret_type} Returns')
+        #plt.title(f"{title}")
+        plt.ylabel('Cumulative Returns')
+        plt.xlabel('Date')
         plt.show()
 
         longs = self.bt[self.bt.direction == 1]
         shorts = self.bt[self.bt.direction == -1]
         fig, ax = plt.subplots()
-        ax = sns.kdeplot(data=longs['returns_f'], label='longs', ax=ax)
-        ax = sns.kdeplot(data=shorts['returns_f'], label='shorts', ax=ax)
-        ax.set_title("Longs vs Shorts")
+        ax = sns.kdeplot(data=longs['returns_f'], label='Long positions', ax=ax)
+        ax = sns.kdeplot(data=shorts['returns_f'], label='Short positions', ax=ax)
+        #ax.set_title("Longs vs Shorts")
+        plt.xlabel('Percentage Return')
         plt.legend()
         plt.show()
 

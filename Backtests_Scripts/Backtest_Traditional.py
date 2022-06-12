@@ -173,7 +173,7 @@ if __name__ == '__main__':
     #system = PolyTrend(csv_path, date_col, maximum_holding, lookback, look_ahead, long_thres, short_thres, ub_mult, lb_mult, long_tp, long_sl, short_tp, short_sl)
     
     # Change time frequency
-    system.dmgt.change_resolution('240min') # 1min .... 60 min
+    system.dmgt.change_resolution('120min') # 1min .... 60 min
 
     system.run_backtest()
     system.show_performace()
