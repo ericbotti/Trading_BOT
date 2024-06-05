@@ -1,10 +1,10 @@
 {
     "real": {
-      "client_id" : "M7vDGQrv",
-      "client_secret" : "6S_iqCbu3KyJtg329vXGSEEIpGRjrzm9dJ1UtK8ur2w"
+      "client_id" : "",
+      "client_secret" : ""
       },
     "paper": {
-      "client_id" : "tb7m_2UP",
-      "client_secret" : "Oso4VxUOzcnQibRe126DUY3e9Tfrh6ob0dxWgKvVXnY"
+      "client_id" : "",
+      "client_secret" : ""
     }
   }
